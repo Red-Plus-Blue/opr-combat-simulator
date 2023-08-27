@@ -37,7 +37,7 @@ public class ArmorPiercingProbabilityTests {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = { 1, 2, 3, 4 })
+    @ValueSource(ints = {1, 2, 3, 4})
     public void givenArmorPiercing_whenAttack_thenSimulatedProbabilitiesMatchStatistical(final int armorPiercing) {
         final var errorBound = 0.015f;
         final var iterations = 100 * 1000;

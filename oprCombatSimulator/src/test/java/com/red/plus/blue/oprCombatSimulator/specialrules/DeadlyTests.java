@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class DeadlyTests {
@@ -23,7 +22,7 @@ public class DeadlyTests {
     private SpecialRulesService specialRulesService;
 
     @ParameterizedTest
-    @ValueSource(ints = { 3, 6, 9 })
+    @ValueSource(ints = {3, 6, 9})
     public void whenDeadlyIsApplied_thenWoundsAreMultiplied(final int deadly) {
         final var deadlyWeapon = Weapon.builder()
                 .attacks(1)

@@ -22,18 +22,18 @@ public class SpecialRulesService {
 
     public Stream<Hit> applyHitMultipliers(final List<SpecialRule> rules, final RollInformation rollInformation) {
         final var hits = rules.stream()
-            .mapToInt(rule -> rule.getApplyHitMultiplier().apply(rollInformation))
-            .reduce(1, (left, right) -> left * right);
+                .mapToInt(rule -> rule.getApplyHitMultiplier().apply(rollInformation))
+                .reduce(1, (left, right) -> left * right);
         return IntStream.range(0, hits).mapToObj(__ -> new Hit());
     }
 
     public WoundGroup applyWoundMultipliers(final List<SpecialRule> rules, final RollInformation rollInformation) {
         final var wounds = rules.stream()
-            .mapToInt(rule -> rule.getApplyWoundMultiplier().apply(rollInformation))
-            .reduce(1, (left, right) -> left * right);
+                .mapToInt(rule -> rule.getApplyWoundMultiplier().apply(rollInformation))
+                .reduce(1, (left, right) -> left * right);
         return WoundGroup.builder()
-            .count(wounds)
-            .build();
+                .count(wounds)
+                .build();
     }
 
 }

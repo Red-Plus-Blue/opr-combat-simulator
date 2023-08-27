@@ -16,9 +16,6 @@ import java.util.stream.IntStream;
 @SpringBootTest
 public class BasicProbabilitiesTests {
 
-    @Autowired
-    private AttackService attackService;
-
     private static final List<List<BigDecimal>> probabilities = IntStream.range(2, 7).mapToObj(quality ->
             IntStream.range(2, 7).mapToObj(defense -> {
                 var toHit = BigDecimal.valueOf(7 - quality)
@@ -28,8 +25,9 @@ public class BasicProbabilitiesTests {
                 // (7-Q / 6) * (D-1 / 6)
                 return toHit.multiply(toFailToBlock);
             }).toList()
-        ).toList();
-
+    ).toList();
+    @Autowired
+    private AttackService attackService;
 
     @Test
     public void givenNoSpecialRules_whenAttack_thenSimulatedProbabilitiesMatchStatistical() {

@@ -37,7 +37,7 @@ public class Table<COLUMN_T, ROW_T, CELL_T> {
         return values.get(row).get(column);
     }
 
-    public Table<COLUMN_T, ROW_T, CELL_T> compute(int columns, int rows) {
+    public Table<COLUMN_T, ROW_T, CELL_T> compute(int rows, int columns) {
         values = new ArrayList<>();
         IntStream.range(0, rows)
                 .forEach(row -> {

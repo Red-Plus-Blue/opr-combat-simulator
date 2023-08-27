@@ -1,4 +1,4 @@
-package com.red.plus.blue.oprCombatSimulator.utils;
+package com.red.plus.blue.oprCombatSimulator.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,5 +16,11 @@ public class $ {
 
     public static <T> T head(List<T> list) {
         return list.get(0);
+    }
+
+    public static <T> List<T> cycled(List<T> list) {
+        final var copy = $.tail(list);
+        copy.add($.head(list));
+        return copy;
     }
 }

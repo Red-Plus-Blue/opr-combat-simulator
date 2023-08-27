@@ -1,6 +1,6 @@
 package com.red.plus.blue.oprCombatSimulator.model;
 
-import com.red.plus.blue.oprCombatSimulator.utils.$;
+import com.red.plus.blue.oprCombatSimulator.util.$;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;

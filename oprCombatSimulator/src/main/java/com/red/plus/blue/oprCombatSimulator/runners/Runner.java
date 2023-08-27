@@ -1,8 +1,10 @@
 package com.red.plus.blue.oprCombatSimulator.runners;
 
 
-import com.red.plus.blue.oprCombatSimulator.armies.SampleArmy;
-import com.red.plus.blue.oprCombatSimulator.model.*;
+import com.red.plus.blue.oprCombatSimulator.model.Model;
+import com.red.plus.blue.oprCombatSimulator.model.ModelGroup;
+import com.red.plus.blue.oprCombatSimulator.model.Unit;
+import com.red.plus.blue.oprCombatSimulator.model.Weapon;
 import com.red.plus.blue.oprCombatSimulator.service.AttackService;
 import com.red.plus.blue.oprCombatSimulator.service.CombatService;
 import com.red.plus.blue.oprCombatSimulator.table.Table;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
@@ -60,8 +61,8 @@ public class Runner implements CommandLineRunner {
                             .mapToObj(__ -> {
                                 final var swap = random.nextInt(2) > 0;
                                 return swap ?
-                                    combatService.doCombat(unitWithModels, unitWithTough) :
-                                    combatService.doCombat(unitWithTough, unitWithModels);
+                                        combatService.doCombat(unitWithModels, unitWithTough) :
+                                        combatService.doCombat(unitWithTough, unitWithModels);
                             })
                             .filter(result -> result.winner().getGroups().get(0).getModel().getTough() == 1)
                             .count() / (double) iterations * 100;

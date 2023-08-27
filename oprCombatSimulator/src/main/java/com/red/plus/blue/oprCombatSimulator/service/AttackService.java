@@ -32,22 +32,22 @@ public class AttackService {
         final Function<Roll, RollInformation> toRollInformation = roll -> new RollInformation(roll, attacker, defender);
 
         return IntStream.range(0, attacks)
-            .mapToObj(__ -> diceService.d6())
-            // remove misses
-            .filter(attacker::isHit)
-            .map(toRollInformation)
-            // apply hit multipliers (ex. blast, v2.5 poison, etc.)
-            .flatMap(information -> specialRulesService.applyHitMultipliers(weapon.getSpecialRules(), information))
-            .map(__ -> diceService.d6())
-            // apply re-rolls to the defender (ex. v3 poison)
-            .map(roll -> specialRulesService.applyDefenseReRolls(specialRules, roll))
-            .map(toRollInformation)
-            // apply modifiers to the defender (ex. ap)
-            .map(information -> specialRulesService.applyDefenseModifiers(specialRules, information))
-            // remove blocks
-            .filter(roll -> !defender.isBlock(roll))
-            .map(toRollInformation)
-            // apply wound multipliers (ex. deadly)
-            .map(information -> specialRulesService.applyWoundMultipliers(weapon.getSpecialRules(), information));
+                .mapToObj(__ -> diceService.d6())
+                // remove misses
+                .filter(attacker::isHit)
+                .map(toRollInformation)
+                // apply hit multipliers (ex. blast, v2.5 poison, etc.)
+                .flatMap(information -> specialRulesService.applyHitMultipliers(weapon.getSpecialRules(), information))
+                .map(__ -> diceService.d6())
+                // apply re-rolls to the defender (ex. v3 poison)
+                .map(roll -> specialRulesService.applyDefenseReRolls(specialRules, roll))
+                .map(toRollInformation)
+                // apply modifiers to the defender (ex. ap)
+                .map(information -> specialRulesService.applyDefenseModifiers(specialRules, information))
+                // remove blocks
+                .filter(roll -> !defender.isBlock(roll))
+                .map(toRollInformation)
+                // apply wound multipliers (ex. deadly)
+                .map(information -> specialRulesService.applyWoundMultipliers(weapon.getSpecialRules(), information));
     }
 }

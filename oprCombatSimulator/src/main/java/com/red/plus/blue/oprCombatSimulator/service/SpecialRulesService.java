@@ -42,10 +42,10 @@ public class SpecialRulesService {
 
     public Roll applyDefenseReRolls(final List<SpecialRule> rules, final Roll roll) {
         final var requiresReRoll = rules.stream()
-            .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(roll));
+                .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(roll));
         return requiresReRoll ?
-            diceService.d6() :
-            roll;
+                diceService.d6() :
+                roll;
     }
 
 }

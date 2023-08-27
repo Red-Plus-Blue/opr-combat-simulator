@@ -2,7 +2,6 @@ package com.red.plus.blue.oprCombatSimulator.runners;
 
 
 import com.red.plus.blue.oprCombatSimulator.armies.SampleArmy;
-import com.red.plus.blue.oprCombatSimulator.constants.Version;
 import com.red.plus.blue.oprCombatSimulator.model.SpecialRuleFactory;
 import com.red.plus.blue.oprCombatSimulator.model.Weapon;
 import com.red.plus.blue.oprCombatSimulator.service.AttackService;
@@ -23,7 +22,7 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(final String... args) throws Exception {
-        final var iterations = 1 * 1000; // Increase for more consistent results
+        final var iterations = 1000; // Increase for more consistent results
         final var baseDamageTable = Table.<Integer, Integer, Double>builder()
                 .title("Base Damage w/ 10 models A1")
                 .rowHeaderGenerator(quality -> "Q" + (quality + 2))
@@ -65,7 +64,7 @@ public class Runner implements CommandLineRunner {
                 .rowGenerator(index -> index)
                 .cellMapper((row, column) -> {
                     final var baseDamage = baseDamageTable.get(row, column);
-                    final var poisonDamage =  poisonDamageTable.get(row, column);
+                    final var poisonDamage = poisonDamageTable.get(row, column);
                     return 100f * (poisonDamage - baseDamage) / baseDamage;
                 })
                 .build()

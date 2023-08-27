@@ -4,11 +4,11 @@ import com.red.plus.blue.oprCombatSimulator.constants.Version;
 
 public class SpecialRuleFactory {
 
-    protected static SpecialRule V2_5_POISON =  SpecialRule.builder()
-        .applyHitMultiplier(rollInformation -> rollInformation.roll().isNatural6() ? 3 : 1)
-        .build();
+    protected static SpecialRule V2_5_POISON = SpecialRule.builder()
+            .applyHitMultiplier(rollInformation -> rollInformation.roll().isNatural6() ? 3 : 1)
+            .build();
 
-    protected static SpecialRule V3_0_POISON =  SpecialRule.builder()
+    protected static SpecialRule V3_0_POISON = SpecialRule.builder()
             .requiresDefenseReRoll(Roll::isNatural6)
             .build();
 
@@ -30,8 +30,8 @@ public class SpecialRuleFactory {
 
     public static SpecialRule poison(Version version) {
         return version == Version.V2_5 ?
-            V2_5_POISON :
-            V3_0_POISON;
+                V2_5_POISON :
+                V3_0_POISON;
     }
 
     public static SpecialRule deadly(final int magnitude) {

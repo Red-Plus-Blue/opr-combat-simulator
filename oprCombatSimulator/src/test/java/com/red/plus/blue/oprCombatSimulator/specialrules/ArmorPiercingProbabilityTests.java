@@ -1,6 +1,6 @@
 package com.red.plus.blue.oprCombatSimulator.specialrules;
 
-import com.red.plus.blue.oprCombatSimulator.constants.SpecialRules;
+import com.red.plus.blue.oprCombatSimulator.model.SpecialRuleFactory;
 import com.red.plus.blue.oprCombatSimulator.data.TestArmy;
 import com.red.plus.blue.oprCombatSimulator.model.Weapon;
 import com.red.plus.blue.oprCombatSimulator.service.AttackService;
@@ -52,7 +52,7 @@ public class ArmorPiercingProbabilityTests {
                             .get(defense - 2);
                     final var weapon = Weapon.builder()
                             .attacks(1)
-                            .specialRules(List.of(SpecialRules.armorPiercing(armorPiercing)))
+                            .specialRules(List.of(SpecialRuleFactory.armorPiercing(armorPiercing)))
                             .build();
                     final var attacker = TestArmy.testUnit(models, quality, defense, weapon).build();
                     final var defender = TestArmy.testUnit(models, quality, defense).build();

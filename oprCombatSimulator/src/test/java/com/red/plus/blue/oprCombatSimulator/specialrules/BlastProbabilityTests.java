@@ -1,6 +1,6 @@
 package com.red.plus.blue.oprCombatSimulator.specialrules;
 
-import com.red.plus.blue.oprCombatSimulator.constants.SpecialRules;
+import com.red.plus.blue.oprCombatSimulator.model.SpecialRuleFactory;
 import com.red.plus.blue.oprCombatSimulator.data.TestArmy;
 import com.red.plus.blue.oprCombatSimulator.model.Weapon;
 import com.red.plus.blue.oprCombatSimulator.service.AttackService;
@@ -40,7 +40,7 @@ public class BlastProbabilityTests {
         final var blast = 3;
         final var blastWeapon = Weapon.builder()
                 .attacks(1)
-                .specialRules(List.of(SpecialRules.blast(blast)))
+                .specialRules(List.of(SpecialRuleFactory.blast(blast)))
                 .build();
         final var qualities = IntStream.range(2, 7).boxed().toList();
         final var defenses = IntStream.range(2, 7).boxed().toList();

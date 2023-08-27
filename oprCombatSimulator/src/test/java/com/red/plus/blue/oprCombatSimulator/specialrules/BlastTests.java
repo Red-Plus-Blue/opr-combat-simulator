@@ -1,6 +1,6 @@
 package com.red.plus.blue.oprCombatSimulator.specialrules;
 
-import com.red.plus.blue.oprCombatSimulator.constants.SpecialRules;
+import com.red.plus.blue.oprCombatSimulator.model.SpecialRuleFactory;
 import com.red.plus.blue.oprCombatSimulator.data.TestArmy;
 import com.red.plus.blue.oprCombatSimulator.model.Roll;
 import com.red.plus.blue.oprCombatSimulator.model.RollInformation;
@@ -32,7 +32,7 @@ public class BlastTests {
 
         final var blastWeapon = Weapon.builder()
                 .attacks(1)
-                .specialRules(List.of(SpecialRules.blast(blast)))
+                .specialRules(List.of(SpecialRuleFactory.blast(blast)))
                 .build();
 
         final var rollInformation = new RollInformation(
@@ -55,7 +55,7 @@ public class BlastTests {
 
         final var blastWeapon = Weapon.builder()
                 .attacks(1)
-                .specialRules(List.of(SpecialRules.blast(blast)))
+                .specialRules(List.of(SpecialRuleFactory.blast(blast)))
                 .build();
 
         final var rollInformation = new RollInformation(
@@ -77,7 +77,7 @@ public class BlastTests {
 
         final var blastWeapon = Weapon.builder()
                 .attacks(1)
-                .specialRules(List.of(SpecialRules.blast(blast)))
+                .specialRules(List.of(SpecialRuleFactory.blast(blast)))
                 .build();
 
         final var rollInformation = new RollInformation(

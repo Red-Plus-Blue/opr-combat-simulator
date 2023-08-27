@@ -9,7 +9,9 @@ import java.util.List;
 @Builder
 @Getter
 public class Weapon {
-    protected int attacks;
+
+    @Builder.Default
+    protected int attacks = 1;
 
     @Builder.Default
     protected List<SpecialRule> specialRules = new ArrayList<>();

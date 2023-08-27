@@ -1,6 +1,7 @@
 package com.red.plus.blue.oprCombatSimulator.service;
 
 import com.red.plus.blue.oprCombatSimulator.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.stream.Stream;
 
 @Component
 public class SpecialRulesService {
+
+    @Autowired
+    protected DiceService diceService;
 
     public Roll applyDefenseModifiers(final List<SpecialRule> rules, final RollInformation rollInformation) {
         final var modifier = rules.stream()
@@ -34,6 +38,14 @@ public class SpecialRulesService {
         return WoundGroup.builder()
                 .count(wounds)
                 .build();
+    }
+
+    public Roll applyDefenseReRolls(final List<SpecialRule> rules, final Roll roll) {
+        final var requiresReRoll = rules.stream()
+            .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(roll));
+        return requiresReRoll ?
+            diceService.d6() :
+            roll;
     }
 
 }

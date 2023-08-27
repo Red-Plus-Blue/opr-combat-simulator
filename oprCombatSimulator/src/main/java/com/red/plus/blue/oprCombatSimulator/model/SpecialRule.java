@@ -18,4 +18,7 @@ public class SpecialRule {
     @Builder.Default
     protected Function<RollInformation, Integer> applyWoundMultiplier = __ -> 1;
 
+    @Builder.Default
+    protected Function<Roll, Boolean> requiresDefenseReRoll = __ -> false;
+
 }

@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-@Builder
+@Builder(toBuilder = true)
 public class Table<COLUMN_T, ROW_T, CELL_T> {
 
     @Builder.Default
@@ -33,7 +33,11 @@ public class Table<COLUMN_T, ROW_T, CELL_T> {
     @Builder.Default
     protected List<List<CELL_T>> values = List.of(new ArrayList<>());
 
-    public void compute(int columns, int rows) {
+    public CELL_T get(int row, int column) {
+        return values.get(row).get(column);
+    }
+
+    public Table<COLUMN_T, ROW_T, CELL_T> compute(int columns, int rows) {
         values = new ArrayList<>();
         IntStream.range(0, rows)
                 .forEach(row -> {
@@ -46,6 +50,7 @@ public class Table<COLUMN_T, ROW_T, CELL_T> {
                             });
                     values.add(columnValues);
                 });
+        return this;
     }
 
     public void print(int columnWidth, Function<CELL_T, String> cellToString) {

@@ -11,6 +11,10 @@ public class SampleArmy {
 
     public static Unit.UnitBuilder sampleUnit(final int quality, final int defense) {
         final var weapon = Weapon.builder().attacks(1).build();
+        return sampleUnit(quality, defense, weapon);
+    }
+
+    public static Unit.UnitBuilder sampleUnit(final int quality, final int defense, Weapon weapon) {
         final var model = Model.builder().weapon(weapon).build();
         final var modelGroup = ModelGroup.builder()
                 .count(10)

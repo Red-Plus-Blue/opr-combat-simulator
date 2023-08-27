@@ -1,6 +1,6 @@
 package com.red.plus.blue.oprCombatSimulator.specialrules;
 
-import com.red.plus.blue.oprCombatSimulator.constants.SpecialRules;
+import com.red.plus.blue.oprCombatSimulator.model.SpecialRuleFactory;
 import com.red.plus.blue.oprCombatSimulator.data.TestArmy;
 import com.red.plus.blue.oprCombatSimulator.model.Roll;
 import com.red.plus.blue.oprCombatSimulator.model.RollInformation;
@@ -26,7 +26,7 @@ public class DeadlyTests {
     public void whenDeadlyIsApplied_thenWoundsAreMultiplied(final int deadly) {
         final var deadlyWeapon = Weapon.builder()
                 .attacks(1)
-                .specialRules(List.of(SpecialRules.deadly(deadly)))
+                .specialRules(List.of(SpecialRuleFactory.deadly(deadly)))
                 .build();
         // note: unit data doesn't matter
         final var attacker = TestArmy.simpleSingleModelUnit(deadlyWeapon).build();

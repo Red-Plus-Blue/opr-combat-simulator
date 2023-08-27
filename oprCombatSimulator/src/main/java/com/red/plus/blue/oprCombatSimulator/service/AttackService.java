@@ -42,6 +42,7 @@ public class AttackService {
                 // apply re-rolls to the defender (ex. v3 poison)
                 .map(roll -> specialRulesService.applyDefenseReRolls(specialRules, roll))
                 .map(toRollInformation)
+                // apply modifiers to the defender (ex. ap)
                 .map(information -> specialRulesService.applyDefenseModifiers(specialRules, information))
                 // remove blocks
                 .filter(roll -> !defender.isBlock(roll))

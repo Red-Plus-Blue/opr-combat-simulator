@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Setter;
 
-@Builder
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class Roll {
 
     protected int value;
@@ -13,22 +13,12 @@ public class Roll {
     @Setter
     protected int modifier;
 
-    public Roll(final Roll other) {
-        this.value = other.value;
-        this.modifier = other.modifier;
-    }
-
     public int getModifiedValue() {
         return value + modifier;
     }
 
     public int getUnmodifiedValue() {
         return value;
-    }
-
-    public Roll addModifier(int change) {
-        this.modifier += change;
-        return this;
     }
 
     public boolean isNatural6() {

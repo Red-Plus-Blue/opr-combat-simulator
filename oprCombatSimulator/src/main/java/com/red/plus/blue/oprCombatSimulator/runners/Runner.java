@@ -21,6 +21,7 @@ public class Runner implements CommandLineRunner {
     public void run(final String... args) throws Exception {
         final var iterations = 10 * 1000;
         var results = Table.<Integer, Integer, Double>builder()
+                .title("Base Probabilities w/ 10 models, A1")
                 .rowHeaderGenerator(quality -> "Q" + (quality + 2))
                 .columnHeaderGenerator(defense -> "D" + (defense + 2))
                 .columnGenerator(index -> index + 2)

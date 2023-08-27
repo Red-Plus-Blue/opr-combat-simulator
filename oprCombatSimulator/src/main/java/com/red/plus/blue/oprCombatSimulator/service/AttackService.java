@@ -1,9 +1,6 @@
 package com.red.plus.blue.oprCombatSimulator.service;
 
-import com.red.plus.blue.oprCombatSimulator.model.RollInformation;
-import com.red.plus.blue.oprCombatSimulator.model.Unit;
-import com.red.plus.blue.oprCombatSimulator.model.WeaponGroup;
-import com.red.plus.blue.oprCombatSimulator.model.WoundGroup;
+import com.red.plus.blue.oprCombatSimulator.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,19 +29,21 @@ public class AttackService {
         final var weapon = weaponGroup.getWeapon();
         final var specialRules = weapon.getSpecialRules();
         final var attacks = weaponGroup.getCount() * weapon.getAttacks();
+        final Function<Roll, RollInformation> toRollInformation = roll -> new RollInformation(roll, attacker, defender);
 
         return IntStream.range(0, attacks)
                 .mapToObj(__ -> diceService.d6())
                 // remove misses
                 .filter(attacker::isHit)
-                .map(roll -> new RollInformation(roll, attacker, defender))
+                .map(toRollInformation)
                 // apply hit multipliers (blast, poison, etc.)
                 .flatMap(information -> specialRulesService.applyHitMultipliers(weapon.getSpecialRules(), information))
                 .map(__ -> diceService.d6())
-                .map(roll -> specialRulesService.applyDefenseModifications(specialRules, roll))
+                .map(toRollInformation)
+                .map(information -> specialRulesService.applyDefenseModifiers(specialRules, information))
                 // remove blocks
                 .filter(roll -> !defender.isBlock(roll))
-                .map(roll -> new RollInformation(roll, attacker, defender))
+                .map(toRollInformation)
                 // apply wound multipliers (deadly)
                 .map(information -> specialRulesService.applyWoundMultipliers(weapon.getSpecialRules(), information));
     }

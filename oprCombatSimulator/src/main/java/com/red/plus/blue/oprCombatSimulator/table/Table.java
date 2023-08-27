@@ -13,6 +13,9 @@ import java.util.stream.Stream;
 public class Table<COLUMN_T, ROW_T, CELL_T> {
 
     @Builder.Default
+    protected String title = "Table";
+
+    @Builder.Default
     protected Function<Integer, String> columnHeaderGenerator = Object::toString;
 
     @Builder.Default
@@ -46,6 +49,7 @@ public class Table<COLUMN_T, ROW_T, CELL_T> {
     }
 
     public void print(int columnWidth, Function<CELL_T, String> cellToString) {
+        System.out.println("------ " + this.title + " ------");
         final var stringFormat = "%" + (columnWidth - 1) + "s";
         final var tableHeader = Stream.concat(
                 Stream.of(String.format(stringFormat, "")),

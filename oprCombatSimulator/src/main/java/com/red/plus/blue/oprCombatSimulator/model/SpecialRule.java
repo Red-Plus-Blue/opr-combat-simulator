@@ -10,12 +10,12 @@ import java.util.function.Function;
 public class SpecialRule {
 
     @Builder.Default
-    protected Function<Roll, Roll> applyDefenseModifiers = Function.identity();
+    protected Function<RollInformation, Integer> applyDefenseModifier = __ -> 0;
 
     @Builder.Default
-    protected Function<RollInformation, Integer> applyHitMultipliers = __ -> 1;
+    protected Function<RollInformation, Integer> applyHitMultiplier = __ -> 1;
 
     @Builder.Default
-    protected Function<RollInformation, Integer> applyWoundMultipliers = __ -> 1;
+    protected Function<RollInformation, Integer> applyWoundMultiplier = __ -> 1;
 
 }

@@ -28,13 +28,9 @@ public class AttackService {
     public Stream<WoundGroup> attackWithWeaponGroup(final Unit attacker, final Unit defender, WeaponGroup weaponGroup) {
         final var weapon = weaponGroup.getWeapon();
         final var specialRules = weapon.getSpecialRules();
-        final var attacks = weaponGroup.getCount() * weapon.getAttacks();
         final Function<Roll, RollInformation> toRollInformation = roll -> new RollInformation(roll, attacker, defender);
 
-        return IntStream.range(0, attacks)
-                .mapToObj(__ -> diceService.d6())
-                // remove misses
-                .filter(attacker::isHit)
+        return getHits(attacker, weaponGroup)
                 .map(toRollInformation)
                 // apply hit multipliers (ex. blast, v2.5 poison, etc.)
                 .flatMap(information -> specialRulesService.applyHitMultipliers(weapon.getSpecialRules(), information))
@@ -49,5 +45,14 @@ public class AttackService {
                 .map(toRollInformation)
                 // apply wound multipliers (ex. deadly)
                 .map(information -> specialRulesService.applyWoundMultipliers(weapon.getSpecialRules(), information));
+    }
+
+    public Stream<Roll> getHits(final Unit attacker, WeaponGroup weaponGroup) {
+        final var weapon = weaponGroup.getWeapon();
+        final var attacks = weaponGroup.getCount() * weapon.getAttacks();
+        return IntStream.range(0, attacks)
+            .mapToObj(__ -> diceService.d6())
+            // remove misses
+            .filter(attacker::isHit);
     }
 }

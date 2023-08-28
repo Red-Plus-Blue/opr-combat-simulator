@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 public class Unit {
 
     @Builder.Default
+    protected String name = "Unit";
+    @Builder.Default
     protected int quality = 3;
     @Builder.Default
     protected int defense = 3;

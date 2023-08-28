@@ -7,14 +7,14 @@ import com.red.plus.blue.oprCombatSimulator.model.Unit;
 import com.red.plus.blue.oprCombatSimulator.model.Weapon;
 import com.red.plus.blue.oprCombatSimulator.service.AttackService;
 import com.red.plus.blue.oprCombatSimulator.service.CombatService;
+import com.red.plus.blue.oprCombatSimulator.service.SimulationService;
 import com.red.plus.blue.oprCombatSimulator.table.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Random;
-import java.util.stream.IntStream;
+import java.util.UUID;
 
 @Component
 public class Runner implements CommandLineRunner {
@@ -24,6 +24,9 @@ public class Runner implements CommandLineRunner {
 
     @Autowired
     protected CombatService combatService;
+
+    @Autowired
+    protected SimulationService simulationService;
 
     protected static Unit unit(final int size, final int tough, final int attacks) {
         final var weapon = Weapon.builder()
@@ -38,6 +41,7 @@ public class Runner implements CommandLineRunner {
                 .count(size)
                 .build();
         return Unit.builder()
+                .name(UUID.randomUUID().toString())
                 .groups(List.of(group))
                 .quality(4)
                 .defense(4)
@@ -47,7 +51,6 @@ public class Runner implements CommandLineRunner {
     @Override
     public void run(final String... args) throws Exception {
         final var iterations = 10 * 1000; // Increase for more consistent results
-        final var random = new Random();
         final var table = Table.<Integer, Integer, Double>builder()
                 .title("[X]T(1) vs [1]T(X)")
                 .rowHeaderGenerator(size -> "[" + ((size + 1) * 3) + "]T1")
@@ -57,15 +60,7 @@ public class Runner implements CommandLineRunner {
                 .cellMapper((size, tough) -> {
                     final var unitWithModels = unit(size, 1, 1);
                     final var unitWithTough = unit(1, tough, tough);
-                    return IntStream.range(0, iterations)
-                            .mapToObj(__ -> {
-                                final var swap = random.nextInt(2) > 0;
-                                return swap ?
-                                        combatService.doCombat(unitWithModels, unitWithTough) :
-                                        combatService.doCombat(unitWithTough, unitWithModels);
-                            })
-                            .filter(result -> result.winner().getGroups().get(0).getModel().getTough() == 1)
-                            .count() / (double) iterations * 100;
+                    return simulationService.winRate(unitWithModels, unitWithTough, iterations);
                 })
                 .build()
                 .compute(10, 10);

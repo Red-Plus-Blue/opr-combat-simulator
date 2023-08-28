@@ -51,8 +51,8 @@ public class AttackService {
         final var weapon = weaponGroup.getWeapon();
         final var attacks = weaponGroup.getCount() * weapon.getAttacks();
         return IntStream.range(0, attacks)
-            .mapToObj(__ -> diceService.d6())
-            // remove misses
-            .filter(attacker::isHit);
+                .mapToObj(__ -> diceService.d6())
+                // remove misses
+                .filter(attacker::isHit);
     }
 }

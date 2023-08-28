@@ -19,27 +19,27 @@ public class SimulationService {
     protected AttackService attackService;
 
     public double winRate(Unit unitA, Unit unitB, int iterations) {
-        if(StringUtils.equals(unitA.getName(), unitB.getName())) {
+        if (StringUtils.equals(unitA.getName(), unitB.getName())) {
             throw new SimulationServiceException("Units must have different names.");
         }
         final var random = new Random();
         return IntStream.range(0, iterations)
-            .mapToObj(__ -> {
-                final var swap = random.nextInt(2) > 0;
-                return swap ?
-                    combatService.doCombat(unitA, unitB) :
-                    combatService.doCombat(unitB, unitA);
-            })
-            .filter(result -> StringUtils.equals(result.winner().getName(), unitA.getName()))
-            .count() / (double) iterations * 100;
+                .mapToObj(__ -> {
+                    final var swap = random.nextInt(2) > 0;
+                    return swap ?
+                            combatService.doCombat(unitA, unitB) :
+                            combatService.doCombat(unitB, unitA);
+                })
+                .filter(result -> StringUtils.equals(result.winner().getName(), unitA.getName()))
+                .count() / (double) iterations * 100;
     }
 
     public double averageHits(Unit unit, int iterations) {
         return IntStream.range(0, iterations)
-            .map(__ -> unit.getWeaponGroups().stream()
-                .mapToInt(weaponGroup -> (int) attackService.getHits(unit, weaponGroup).count())
-                .sum()
-            )
-            .count() / (double) iterations * 100;
+                .map(__ -> unit.getWeaponGroups().stream()
+                        .mapToInt(weaponGroup -> (int) attackService.getHits(unit, weaponGroup).count())
+                        .sum()
+                )
+                .count() / (double) iterations * 100;
     }
 }

@@ -1,10 +1,8 @@
 package com.red.plus.blue.oprCombatSimulator.runners;
 
 
-import com.red.plus.blue.oprCombatSimulator.model.Model;
-import com.red.plus.blue.oprCombatSimulator.model.ModelGroup;
-import com.red.plus.blue.oprCombatSimulator.model.Unit;
-import com.red.plus.blue.oprCombatSimulator.model.Weapon;
+import com.red.plus.blue.oprCombatSimulator.armies.SampleArmy;
+import com.red.plus.blue.oprCombatSimulator.model.*;
 import com.red.plus.blue.oprCombatSimulator.service.AttackService;
 import com.red.plus.blue.oprCombatSimulator.service.CombatService;
 import com.red.plus.blue.oprCombatSimulator.service.SimulationService;
@@ -15,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 @Component
 public class Runner implements CommandLineRunner {
@@ -28,43 +29,45 @@ public class Runner implements CommandLineRunner {
     @Autowired
     protected SimulationService simulationService;
 
-    protected static Unit unit(final int size, final int tough, final int attacks) {
-        final var weapon = Weapon.builder()
-                .attacks(attacks)
-                .build();
-        final var model = Model.builder()
-                .tough(tough)
-                .weapon(weapon)
-                .build();
-        final var group = ModelGroup.builder()
-                .model(model)
-                .count(size)
-                .build();
-        return Unit.builder()
-                .name(UUID.randomUUID().toString())
-                .groups(List.of(group))
-                .quality(4)
-                .defense(4)
-                .build();
-    }
-
     @Override
     public void run(final String... args) throws Exception {
         final var iterations = 10 * 1000; // Increase for more consistent results
-        final var table = Table.<Integer, Integer, Double>builder()
-                .title("[X]T(1) vs [1]T(X)")
-                .rowHeaderGenerator(size -> "[" + ((size + 1) * 3) + "]T1")
-                .columnHeaderGenerator(tough -> "[1]T(" + ((tough + 1) * 3) + ")")
-                .columnGenerator(index -> ((index + 1) * 3))
-                .rowGenerator(index -> ((index + 1) * 3))
-                .cellMapper((size, tough) -> {
-                    final var unitWithModels = unit(size, 1, 1);
-                    final var unitWithTough = unit(1, tough, tough);
-                    return simulationService.winRate(unitWithModels, unitWithTough, iterations);
-                })
-                .build()
-                .compute(10, 10);
+        final BiFunction<Integer, Integer, Unit> attacker = (quality, defense) -> SampleArmy.sampleUnit(quality, defense).build();
+        final BiFunction<Integer, Integer, Unit> defender = (quality, defense) -> SampleArmy.sampleUnit(quality, defense).build();
+        final BiFunction<Unit, Unit, Double> getAverageDamage = (attackingUnit, defendingUnit) -> IntStream.range(0, iterations)
+                .map(__ -> attackService.attack(attackingUnit, defendingUnit).stream().mapToInt(WoundGroup::getCount).sum())
+                .sum() / (double) iterations;
 
-        table.print(10, number -> String.format("%3.3f", number));
+        final BiFunction<Unit, Unit, Double> getAverageHits = (attackingUnit, defendingUnit) -> IntStream.range(0, iterations)
+                .mapToLong(__ -> attackingUnit.getWeaponGroups().stream().flatMap(weaponGroup -> attackService.getHits(attackingUnit, weaponGroup)).count())
+                .sum() / (double) iterations;
+
+        final var averageDamage = simulationService.qualityDefenseMatrix(attacker, defender, getAverageDamage);
+
+        final var averageDamageTable = Table.<Integer, Integer, Double>builder()
+                .title("Average Damage w/ size 10 unit A1")
+                .columnGenerator(index -> index)
+                .rowGenerator(index -> index)
+                .rowHeaderGenerator(index -> "Q" + (index + 2))
+                .columnHeaderGenerator(index -> "D" + (index + 2))
+                .cellMapper((quality, defense) -> averageDamage.get(quality).get(defense))
+                .build()
+                .compute(5, 5);
+
+        averageDamageTable.print(10, number -> String.format("%3.2f", number));
+
+        final var averageHits = simulationService.qualityDefenseMatrix(attacker, defender, getAverageHits);
+
+        final var averageHitsTable = Table.<Integer, Integer, Double>builder()
+                .title("Average hits w/ size 10 unit A1")
+                .columnGenerator(index -> index)
+                .rowGenerator(index -> index)
+                .rowHeaderGenerator(index -> "Q" + (index + 2))
+                .columnHeaderGenerator(index -> "D" + (index + 2))
+                .cellMapper((quality, defense) -> averageHits.get(quality).get(defense))
+                .build()
+                .compute(5, 5);
+
+        averageHitsTable.print(10, number -> String.format("%3.2f", number));
     }
 }

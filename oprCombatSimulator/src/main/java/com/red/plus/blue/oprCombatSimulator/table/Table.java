@@ -16,7 +16,7 @@ public class Table<COLUMN_T, ROW_T, CELL_T> {
     protected String title = "Table";
 
     @Builder.Default
-    protected Function<Integer, String> columnHeaderGenerator = Object::toString;
+    protected Function<COLUMN_T, String> columnHeaderGenerator = Object::toString;
 
     @Builder.Default
     protected Function<Integer, COLUMN_T> columnGenerator = index -> null;
@@ -25,7 +25,7 @@ public class Table<COLUMN_T, ROW_T, CELL_T> {
     protected Function<Integer, ROW_T> rowGenerator = index -> null;
 
     @Builder.Default
-    protected Function<Integer, String> rowHeaderGenerator = Object::toString;
+    protected Function<ROW_T, String> rowHeaderGenerator = Object::toString;
 
     @Builder.Default
     protected BiFunction<ROW_T, COLUMN_T, CELL_T> cellMapper = (row, column) -> null;
@@ -59,14 +59,15 @@ public class Table<COLUMN_T, ROW_T, CELL_T> {
         final var tableHeader = Stream.concat(
                 Stream.of(String.format(stringFormat, "")),
                 IntStream.range(0, values.get(0).size())
-                        .mapToObj(columnHeaderGenerator::apply)
+                        .mapToObj(columnGenerator::apply)
+                        .map(columnHeaderGenerator)
                         .map(str -> String.format(stringFormat, str))
         ).toList();
         System.out.println(String.join(",", tableHeader));
 
         IntStream.range(0, values.size()).forEach(rowIndex -> {
             final var line = new ArrayList<String>();
-            final var rowHeader = String.format(stringFormat, rowHeaderGenerator.apply(rowIndex));
+            final var rowHeader = String.format(stringFormat, rowHeaderGenerator.apply(rowGenerator.apply(rowIndex)));
             line.add(rowHeader);
             var row = values.get(rowIndex);
             IntStream.range(0, row.size()).forEach(columnIndex -> {

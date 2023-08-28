@@ -2,7 +2,8 @@ package com.red.plus.blue.oprCombatSimulator.runners;
 
 
 import com.red.plus.blue.oprCombatSimulator.armies.SampleArmy;
-import com.red.plus.blue.oprCombatSimulator.model.*;
+import com.red.plus.blue.oprCombatSimulator.model.Unit;
+import com.red.plus.blue.oprCombatSimulator.model.WoundGroup;
 import com.red.plus.blue.oprCombatSimulator.service.AttackService;
 import com.red.plus.blue.oprCombatSimulator.service.CombatService;
 import com.red.plus.blue.oprCombatSimulator.service.SimulationService;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.UUID;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.IntStream;
 
 @Component

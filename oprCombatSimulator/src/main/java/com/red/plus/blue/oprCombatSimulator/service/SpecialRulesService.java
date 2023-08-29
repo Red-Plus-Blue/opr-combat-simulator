@@ -18,7 +18,7 @@ public class SpecialRulesService {
     protected DiceService diceService;
 
     public Hit applyDefenseModifiers(final List<SpecialRule> rules, final Hit hit) {
-        if(CollectionUtils.isEmpty(rules)) {
+        if (CollectionUtils.isEmpty(rules)) {
             return hit;
         }
 
@@ -38,7 +38,7 @@ public class SpecialRulesService {
     }
 
     public WoundGroup applyWoundMultipliers(final List<SpecialRule> rules, final Hit hit) {
-        if(CollectionUtils.isEmpty(rules)) {
+        if (CollectionUtils.isEmpty(rules)) {
             WoundGroup.builder().count(1).build();
         }
 
@@ -51,31 +51,31 @@ public class SpecialRulesService {
     }
 
     public Hit applyDefenseReRolls(final List<SpecialRule> rules, final Hit hit) {
-        if(CollectionUtils.isEmpty(rules)) {
+        if (CollectionUtils.isEmpty(rules)) {
             return hit;
         }
 
         final var requiresReRoll = rules.stream()
                 .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(hit));
         return requiresReRoll ?
-            hit.toBuilder()
-                .defenseRoll(diceService.d6())
-                .build() :
-            hit;
+                hit.toBuilder()
+                        .defenseRoll(diceService.d6())
+                        .build() :
+                hit;
     }
 
     public Hit applyHitFlags(final List<SpecialRule> rules, final Hit hit) {
-        if(CollectionUtils.isEmpty(rules)) {
+        if (CollectionUtils.isEmpty(rules)) {
             return hit;
         }
 
         var flags = hit.getFlags();
-        for(var rule : rules) {
+        for (var rule : rules) {
             flags = rule.getApplyHitFlags().apply(flags);
         }
         return hit.toBuilder()
-            .flags(flags)
-            .build();
+                .flags(flags)
+                .build();
     }
 
 }

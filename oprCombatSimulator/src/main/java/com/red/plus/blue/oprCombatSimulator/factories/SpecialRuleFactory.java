@@ -5,9 +5,6 @@ import com.red.plus.blue.oprCombatSimulator.constants.Version;
 import com.red.plus.blue.oprCombatSimulator.model.SpecialRule;
 import com.red.plus.blue.oprCombatSimulator.util.$;
 
-import java.util.EnumSet;
-import java.util.stream.Stream;
-
 public class SpecialRuleFactory {
 
     protected static SpecialRule V2_5_POISON = SpecialRule.builder()

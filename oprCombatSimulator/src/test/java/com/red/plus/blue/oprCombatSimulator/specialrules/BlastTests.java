@@ -2,7 +2,10 @@ package com.red.plus.blue.oprCombatSimulator.specialrules;
 
 import com.red.plus.blue.oprCombatSimulator.data.TestArmy;
 import com.red.plus.blue.oprCombatSimulator.factories.SpecialRuleFactory;
-import com.red.plus.blue.oprCombatSimulator.model.*;
+import com.red.plus.blue.oprCombatSimulator.model.CombatContext;
+import com.red.plus.blue.oprCombatSimulator.model.Hit;
+import com.red.plus.blue.oprCombatSimulator.model.Roll;
+import com.red.plus.blue.oprCombatSimulator.model.Weapon;
 import com.red.plus.blue.oprCombatSimulator.service.SpecialRulesService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

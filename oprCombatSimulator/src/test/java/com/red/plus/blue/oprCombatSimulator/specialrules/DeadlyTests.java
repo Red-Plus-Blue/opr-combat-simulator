@@ -31,9 +31,9 @@ public class DeadlyTests {
         final var defender = TestArmy.simpleSingleModelUnit(15).build();
 
         final var hit = Hit.builder()
-            .attackRoll(Roll.builder().value(6).build())
-            .context(new CombatContext(attacker, defender))
-            .build();
+                .attackRoll(Roll.builder().value(6).build())
+                .context(new CombatContext(attacker, defender))
+                .build();
 
         final var woundGroup = specialRulesService.applyWoundMultipliers(deadlyWeapon.getSpecialRules(), hit);
         assertEquals(deadly, woundGroup.getCount());

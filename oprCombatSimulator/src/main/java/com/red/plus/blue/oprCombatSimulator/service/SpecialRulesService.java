@@ -1,6 +1,8 @@
 package com.red.plus.blue.oprCombatSimulator.service;
 
-import com.red.plus.blue.oprCombatSimulator.model.*;
+import com.red.plus.blue.oprCombatSimulator.model.Hit;
+import com.red.plus.blue.oprCombatSimulator.model.SpecialRule;
+import com.red.plus.blue.oprCombatSimulator.model.WoundGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,8 +46,8 @@ public class SpecialRulesService {
                 .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(hit));
         return requiresReRoll ?
                 hit.toBuilder()
-                    .defenseRoll(diceService.d6())
-                    .build() :
+                        .defenseRoll(diceService.d6())
+                        .build() :
                 hit;
     }
 

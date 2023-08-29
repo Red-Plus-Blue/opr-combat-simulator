@@ -55,9 +55,9 @@ public class BlastTests {
                 .build();
 
         final var hit = Hit.builder()
-            .attackRoll(Roll.builder().value(6).build())
-            .context(new CombatContext(attacker, defender))
-            .build();
+                .attackRoll(Roll.builder().value(6).build())
+                .context(new CombatContext(attacker, defender))
+                .build();
 
         final var hits = specialRulesService.applyHitMultipliers(blastWeapon.getSpecialRules(), hit);
         assertEquals(1, hits.count());
@@ -76,9 +76,9 @@ public class BlastTests {
                 .build();
 
         final var hit = Hit.builder()
-            .attackRoll(Roll.builder().value(6).build())
-            .context(new CombatContext(attacker, defender))
-            .build();
+                .attackRoll(Roll.builder().value(6).build())
+                .context(new CombatContext(attacker, defender))
+                .build();
 
         final var hits = specialRulesService.applyHitMultipliers(blastWeapon.getSpecialRules(), hit);
         assertEquals(Math.min(blast, size), hits.count());

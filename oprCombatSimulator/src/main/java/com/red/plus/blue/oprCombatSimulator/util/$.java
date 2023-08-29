@@ -1,6 +1,7 @@
 package com.red.plus.blue.oprCombatSimulator.util;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class $ {
@@ -22,5 +23,9 @@ public class $ {
         final var copy = $.tail(list);
         copy.add($.head(list));
         return copy;
+    }
+
+    public static <FLAG_T extends Enum<FLAG_T>> EnumSetExtensions<FLAG_T> of(EnumSet<FLAG_T> set) {
+        return new EnumSetExtensions<>(set);
     }
 }

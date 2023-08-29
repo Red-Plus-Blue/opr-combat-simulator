@@ -1,8 +1,10 @@
 package com.red.plus.blue.oprCombatSimulator.model;
 
+import com.red.plus.blue.oprCombatSimulator.constants.HitFlags;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.EnumSet;
 import java.util.function.Function;
 
 @Builder
@@ -20,5 +22,8 @@ public class SpecialRule {
 
     @Builder.Default
     protected Function<Hit, Boolean> requiresDefenseReRoll = __ -> false;
+
+    @Builder.Default
+    protected Function<EnumSet<HitFlags>, EnumSet<HitFlags>> applyHitFlags = Function.identity();
 
 }

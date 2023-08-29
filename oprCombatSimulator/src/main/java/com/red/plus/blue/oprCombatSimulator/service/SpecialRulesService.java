@@ -3,6 +3,7 @@ package com.red.plus.blue.oprCombatSimulator.service;
 import com.red.plus.blue.oprCombatSimulator.model.Hit;
 import com.red.plus.blue.oprCombatSimulator.model.SpecialRule;
 import com.red.plus.blue.oprCombatSimulator.model.WoundGroup;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,10 @@ public class SpecialRulesService {
     protected DiceService diceService;
 
     public Hit applyDefenseModifiers(final List<SpecialRule> rules, final Hit hit) {
+        if(CollectionUtils.isEmpty(rules)) {
+            return hit;
+        }
+
         final var modifier = rules.stream()
                 .mapToInt(rule -> rule.getApplyDefenseModifier().apply(hit))
                 .sum();
@@ -33,6 +38,10 @@ public class SpecialRulesService {
     }
 
     public WoundGroup applyWoundMultipliers(final List<SpecialRule> rules, final Hit hit) {
+        if(CollectionUtils.isEmpty(rules)) {
+            WoundGroup.builder().count(1).build();
+        }
+
         final var wounds = rules.stream()
                 .mapToInt(rule -> rule.getApplyWoundMultiplier().apply(hit))
                 .reduce(1, (left, right) -> left * right);
@@ -42,13 +51,31 @@ public class SpecialRulesService {
     }
 
     public Hit applyDefenseReRolls(final List<SpecialRule> rules, final Hit hit) {
+        if(CollectionUtils.isEmpty(rules)) {
+            return hit;
+        }
+
         final var requiresReRoll = rules.stream()
                 .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(hit));
         return requiresReRoll ?
-                hit.toBuilder()
-                        .defenseRoll(diceService.d6())
-                        .build() :
-                hit;
+            hit.toBuilder()
+                .defenseRoll(diceService.d6())
+                .build() :
+            hit;
+    }
+
+    public Hit applyHitFlags(final List<SpecialRule> rules, final Hit hit) {
+        if(CollectionUtils.isEmpty(rules)) {
+            return hit;
+        }
+
+        var flags = hit.getFlags();
+        for(var rule : rules) {
+            flags = rule.getApplyHitFlags().apply(flags);
+        }
+        return hit.toBuilder()
+            .flags(flags)
+            .build();
     }
 
 }

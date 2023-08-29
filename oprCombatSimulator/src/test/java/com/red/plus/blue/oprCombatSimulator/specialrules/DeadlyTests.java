@@ -1,10 +1,7 @@
 package com.red.plus.blue.oprCombatSimulator.specialrules;
 
 import com.red.plus.blue.oprCombatSimulator.data.TestArmy;
-import com.red.plus.blue.oprCombatSimulator.model.Roll;
-import com.red.plus.blue.oprCombatSimulator.model.RollInformation;
-import com.red.plus.blue.oprCombatSimulator.model.SpecialRuleFactory;
-import com.red.plus.blue.oprCombatSimulator.model.Weapon;
+import com.red.plus.blue.oprCombatSimulator.model.*;
 import com.red.plus.blue.oprCombatSimulator.service.SpecialRulesService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -33,13 +30,12 @@ public class DeadlyTests {
         // note: unit data doesn't matter
         final var defender = TestArmy.simpleSingleModelUnit(15).build();
 
-        final var rollInformation = new RollInformation(
-                Roll.builder().value(6).build(),
-                attacker,
-                defender
-        );
+        final var hit = Hit.builder()
+            .attackRoll(Roll.builder().value(6).build())
+            .context(new CombatContext(attacker, defender))
+            .build();
 
-        final var woundGroup = specialRulesService.applyWoundMultipliers(deadlyWeapon.getSpecialRules(), rollInformation);
+        final var woundGroup = specialRulesService.applyWoundMultipliers(deadlyWeapon.getSpecialRules(), hit);
         assertEquals(deadly, woundGroup.getCount());
     }
 }

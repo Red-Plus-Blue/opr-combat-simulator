@@ -10,15 +10,15 @@ import java.util.function.Function;
 public class SpecialRule {
 
     @Builder.Default
-    protected Function<RollInformation, Integer> applyDefenseModifier = __ -> 0;
+    protected Function<Hit, Integer> applyDefenseModifier = __ -> 0;
 
     @Builder.Default
-    protected Function<RollInformation, Integer> applyHitMultiplier = __ -> 1;
+    protected Function<Hit, Integer> applyHitMultiplier = __ -> 1;
 
     @Builder.Default
-    protected Function<RollInformation, Integer> applyWoundMultiplier = __ -> 1;
+    protected Function<Hit, Integer> applyWoundMultiplier = __ -> 1;
 
     @Builder.Default
-    protected Function<Roll, Boolean> requiresDefenseReRoll = __ -> false;
+    protected Function<Hit, Boolean> requiresDefenseReRoll = __ -> false;
 
 }

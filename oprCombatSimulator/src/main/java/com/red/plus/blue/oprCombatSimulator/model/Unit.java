@@ -83,7 +83,8 @@ public class Unit {
         return roll.getModifiedValue() >= quality;
     }
 
-    public boolean isBlock(final Roll roll) {
+    public boolean isBlock(final Hit hit) {
+        final var roll = hit.getDefenseRoll();
         if (roll.isNatural6()) return true;
         if (roll.isNatural1()) return false;
         return roll.getModifiedValue() >= defense;

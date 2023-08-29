@@ -14,38 +14,39 @@ public class SpecialRulesService {
     @Autowired
     protected DiceService diceService;
 
-    public Roll applyDefenseModifiers(final List<SpecialRule> rules, final RollInformation rollInformation) {
+    public Hit applyDefenseModifiers(final List<SpecialRule> rules, final Hit hit) {
         final var modifier = rules.stream()
-                .mapToInt(rule -> rule.getApplyDefenseModifier().apply(rollInformation))
+                .mapToInt(rule -> rule.getApplyDefenseModifier().apply(hit))
                 .sum();
-        return rollInformation.roll()
-                .toBuilder()
-                .modifier(modifier)
-                .build();
+        // TODO: gross imperative code
+        hit.getDefenseRoll().setModifier(modifier);
+        return hit;
     }
 
-    public Stream<Hit> applyHitMultipliers(final List<SpecialRule> rules, final RollInformation rollInformation) {
+    public Stream<Hit> applyHitMultipliers(final List<SpecialRule> rules, final Hit hit) {
         final var hits = rules.stream()
-                .mapToInt(rule -> rule.getApplyHitMultiplier().apply(rollInformation))
+                .mapToInt(rule -> rule.getApplyHitMultiplier().apply(hit))
                 .reduce(1, (left, right) -> left * right);
-        return IntStream.range(0, hits).mapToObj(__ -> new Hit());
+        return IntStream.range(0, hits).mapToObj(__ -> hit.toBuilder().build());
     }
 
-    public WoundGroup applyWoundMultipliers(final List<SpecialRule> rules, final RollInformation rollInformation) {
+    public WoundGroup applyWoundMultipliers(final List<SpecialRule> rules, final Hit hit) {
         final var wounds = rules.stream()
-                .mapToInt(rule -> rule.getApplyWoundMultiplier().apply(rollInformation))
+                .mapToInt(rule -> rule.getApplyWoundMultiplier().apply(hit))
                 .reduce(1, (left, right) -> left * right);
         return WoundGroup.builder()
                 .count(wounds)
                 .build();
     }
 
-    public Roll applyDefenseReRolls(final List<SpecialRule> rules, final Roll roll) {
+    public Hit applyDefenseReRolls(final List<SpecialRule> rules, final Hit hit) {
         final var requiresReRoll = rules.stream()
-                .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(roll));
+                .anyMatch(rule -> rule.getRequiresDefenseReRoll().apply(hit));
         return requiresReRoll ?
-                diceService.d6() :
-                roll;
+                hit.toBuilder()
+                    .defenseRoll(diceService.d6())
+                    .build() :
+                hit;
     }
 
 }

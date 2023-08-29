@@ -1,6 +1,7 @@
 package com.red.plus.blue.oprCombatSimulator;
 
 import com.red.plus.blue.oprCombatSimulator.data.TestArmy;
+import com.red.plus.blue.oprCombatSimulator.model.Hit;
 import com.red.plus.blue.oprCombatSimulator.model.Roll;
 import com.red.plus.blue.oprCombatSimulator.model.WoundGroup;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,10 @@ public class UnitTests {
                 .value(6)
                 .modifier(modifier)
                 .build();
-        assertTrue(unit.isBlock(natural6));
+        final var hit = Hit.builder()
+                .defenseRoll(natural6)
+                .build();
+        assertTrue(unit.isBlock(hit));
     }
 
     @ParameterizedTest
@@ -54,7 +58,10 @@ public class UnitTests {
                 .value(1)
                 .modifier(modifier)
                 .build();
-        assertFalse(unit.isBlock(natural1));
+        final var hit = Hit.builder()
+                .defenseRoll(natural1)
+                .build();
+        assertFalse(unit.isBlock(hit));
     }
 
     @ParameterizedTest

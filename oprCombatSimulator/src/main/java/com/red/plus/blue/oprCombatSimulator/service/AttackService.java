@@ -27,29 +27,35 @@ public class AttackService {
 
     public Stream<WoundGroup> attackWithWeaponGroup(final Unit attacker, final Unit defender, WeaponGroup weaponGroup) {
         final var weapon = weaponGroup.getWeapon();
+        // TODO: at some point probably need to include special rules from the unit/model
         final var specialRules = weapon.getSpecialRules();
-        final Function<Roll, RollInformation> toRollInformation = roll -> new RollInformation(roll, attacker, defender);
+        final var context = new CombatContext(attacker, defender);
+        final Function<Roll, Hit> toHit = roll -> Hit.builder()
+                .context(context)
+                .attackRoll(roll)
+                .build();
 
         return getHits(attacker, weaponGroup)
-                .map(toRollInformation)
+                .map(toHit)
                 // apply hit multipliers (ex. blast, v2.5 poison, etc.)
-                .flatMap(information -> specialRulesService.applyHitMultipliers(weapon.getSpecialRules(), information))
-                .map(__ -> diceService.d6())
+                .flatMap(hit -> specialRulesService.applyHitMultipliers(weapon.getSpecialRules(), hit))
+                .map(hit -> hit.toBuilder()
+                        .defenseRoll(diceService.d6())
+                        .build())
                 // apply re-rolls to the defender (ex. v3 poison)
-                .map(roll -> specialRulesService.applyDefenseReRolls(specialRules, roll))
-                .map(toRollInformation)
+                .map(hit -> specialRulesService.applyDefenseReRolls(specialRules, hit))
                 // apply modifiers to the defender (ex. ap)
-                .map(information -> specialRulesService.applyDefenseModifiers(specialRules, information))
+                .map(hit -> specialRulesService.applyDefenseModifiers(specialRules, hit))
                 // remove blocks
-                .filter(roll -> !defender.isBlock(roll))
-                .map(toRollInformation)
+                .filter(hit -> !defender.isBlock(hit))
                 // apply wound multipliers (ex. deadly)
-                .map(information -> specialRulesService.applyWoundMultipliers(weapon.getSpecialRules(), information));
+                .map(hit -> specialRulesService.applyWoundMultipliers(weapon.getSpecialRules(), hit));
     }
 
     public Stream<Roll> getHits(final Unit attacker, WeaponGroup weaponGroup) {
         final var weapon = weaponGroup.getWeapon();
         final var attacks = weaponGroup.getCount() * weapon.getAttacks();
+
         return IntStream.range(0, attacks)
                 .mapToObj(__ -> diceService.d6())
                 // remove misses
